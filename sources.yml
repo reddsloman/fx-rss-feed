@@ -1,0 +1,11 @@
+# RSS sources used for the Macro headlines section.
+# You can add/remove RSS feeds here without touching the code.
+reuters:
+  - https://www.reuters.com/markets/currencies/rss
+  - https://www.reuters.com/markets/asia/rss
+  - https://www.reuters.com/world/uk/rss
+  - https://www.reuters.com/world/europe/rss
+fxstreet:
+  - https://www.fxstreet.com/rss
+investing:
+  - https://www.investing.com/rss/news.rss
