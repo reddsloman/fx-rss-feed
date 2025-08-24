@@ -1,91 +1,46 @@
 import os
-import sys
-import requests
 import json
-from datetime import datetime
+import datetime
+import xml.etree.ElementTree as ET
 
-# ==============================
-# Utility: Fetch intraday FX data
-# ==============================
-def fetch_fx_intraday_av(frm: str, to: str, interval: str = "5min"):
-    api_key = os.getenv("ALPHAVANTAGE_API_KEY")
-    if not api_key:
-        print("⚠️ Warning: ALPHAVANTAGE_API_KEY not set. Skipping intraday fetch.")
-        return {
-            "from": frm,
-            "to": to,
-            "interval": interval,
-            "data": []
-        }
+# ... [rest of your existing code above remains unchanged] ...
 
-    url = (
-        f"https://www.alphavantage.co/query"
-        f"?function=FX_INTRADAY&from_symbol={frm}&to_symbol={to}"
-        f"&interval={interval}&apikey={api_key}&outputsize=compact"
-    )
+def save_json(payload, filename="output.json"):
+    with open(filename, "w", encoding="utf-8") as f:
+        json.dump(payload, f, indent=2, ensure_ascii=False)
+    print(f"💾 JSON saved to {filename}")
 
-    try:
-        r = requests.get(url, timeout=30)
-        r.raise_for_status()
-        data = r.json()
+def save_rss(payload, filename="feed.xml"):
+    rss = ET.Element("rss", version="2.0")
+    channel = ET.SubElement(rss, "channel")
 
-        if "Time Series FX" not in data:
-            print(f"⚠️ AlphaVantage returned unexpected response for {frm}/{to}: {data}")
-            return {"from": frm, "to": to, "interval": interval, "data": []}
+    ET.SubElement(channel, "title").text = "FX Market Feed"
+    ET.SubElement(channel, "link").text = "https://github.com/reddsloman/fx-rss-feed"
+    ET.SubElement(channel, "description").text = "Automated FX Macro + Technical Analysis Feed"
+    ET.SubElement(channel, "lastBuildDate").text = datetime.datetime.utcnow().strftime("%a, %d %b %Y %H:%M:%S GMT")
 
-        return {
-            "from": frm,
-            "to": to,
-            "interval": interval,
-            "data": data["Time Series FX ({})".format(interval)]
-        }
+    for entry in payload.get("entries", []):
+        item = ET.SubElement(channel, "item")
+        ET.SubElement(item, "title").text = entry.get("title", "Untitled")
+        ET.SubElement(item, "description").text = entry.get("summary", "")
+        ET.SubElement(item, "pubDate").text = entry.get("date", datetime.datetime.utcnow().strftime("%a, %d %b %Y %H:%M:%S GMT"))
+        ET.SubElement(item, "link").text = entry.get("link", "https://github.com/reddsloman/fx-rss-feed")
 
-    except Exception as e:
-        print(f"❌ Error fetching intraday data for {frm}/{to}: {e}")
-        return {"from": frm, "to": to, "interval": interval, "data": []}
+    tree = ET.ElementTree(rss)
+    tree.write(filename, encoding="utf-8", xml_declaration=True)
+    print(f"💾 RSS feed saved to {filename}")
 
-
-# ==============================
-# Example placeholder snapshot
-# ==============================
-def tech_snapshot_for_pair(frm: str, to: str):
-    intraday = fetch_fx_intraday_av(frm, to, "5min")
-    if not intraday["data"]:
-        return f"{frm}/{to}: intraday data unavailable (no API key or fetch error)."
-
-    latest_time = sorted(intraday["data"].keys())[-1]
-    latest_price = intraday["data"][latest_time]["4. close"]
-    return f"{frm}/{to}: Last price {latest_price} at {latest_time}"
-
-
-# ==============================
-# Report builder
-# ==============================
-def build_report(sources_file: str):
-    report = []
-    pairs = [("EUR", "USD"), ("GBP", "USD"), ("USD", "JPY")]
-    for frm, to in pairs:
-        snap = tech_snapshot_for_pair(frm, to)
-        report.append(snap)
-    return "\n".join(report)
-
-
-# ==============================
-# Main entry point
-# ==============================
 def main():
-    sources_file = os.path.join(os.getcwd(), "sources.yml")
-    payload = build_report(sources_file)
+    # build the report payload
+    payload = build_report("sources.yml")
 
-    # Save as output.json for RSS workflow
-    with open("output.json", "w") as f:
-        json.dump({
-            "timestamp": datetime.utcnow().isoformat(),
-            "report": payload
-        }, f, indent=2)
+    # save JSON
+    save_json(payload, "output.json")
+
+    # save RSS
+    save_rss(payload, "feed.xml")
 
     print("✅ Report generated successfully.")
-
 
 if __name__ == "__main__":
     main()
