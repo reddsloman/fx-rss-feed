@@ -1,6 +1,18 @@
 {
-  "timestamp": "2025-08-25 00:43:26 UTC",
-  "macro": [],
-  "technicals": [],
-  "setups": []
+    "generated_at": "2025-08-25T00:54:50.663232Z",
+    "summary": "FX RSS Feed Auto-Update",
+    "sources": {
+        "reuters": [
+            "https://www.reuters.com/markets/currencies/rss",
+            "https://www.reuters.com/markets/asia/rss",
+            "https://www.reuters.com/world/uk/rss",
+            "https://www.reuters.com/world/europe/rss"
+        ],
+        "fxstreet": [
+            "https://www.fxstreet.com/rss"
+        ],
+        "investing": [
+            "https://www.investing.com/rss/news.rss"
+        ]
+    }
 }
