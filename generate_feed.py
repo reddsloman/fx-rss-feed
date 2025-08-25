@@ -1,64 +1,48 @@
-import feedgenerator
-import datetime
 import json
-import os
+from datetime import datetime, timezone
+from feedgenerator import Rss201rev2Feed
 
-def build_report(source_file):
-    # Placeholder: Replace with actual logic for fetching + consolidating data
-    return {
-        "title": "FX RSS Feed",
-        "link": "https://reddsloman.github.io/fx-rss-feed/rss.xml",
-        "description": "Automated FX Macro + Technical Analysis Feed",
-        "items": [
-            {
-                "title": "EUR/USD Technical Update",
-                "link": "https://www.fxstreet.com/currencies/eurusd",
-                "description": "Latest EUR/USD technical levels and sentiment.",
-                "pubdate": datetime.datetime.utcnow(),
-            },
-            {
-                "title": "GBP/USD Technical Update",
-                "link": "https://www.fxstreet.com/currencies/gbpusd",
-                "description": "Latest GBP/USD technical levels and sentiment.",
-                "pubdate": datetime.datetime.utcnow(),
-            },
-            {
-                "title": "USD/JPY Technical Update",
-                "link": "https://www.fxstreet.com/currencies/usdjpy",
-                "description": "Latest USD/JPY technical levels and sentiment.",
-                "pubdate": datetime.datetime.utcnow(),
-            },
-        ],
-    }
+# Generate RSS feed
+feed = Rss201rev2Feed(
+    title="FX RSS Feed",
+    link="https://reddsloman.github.io/fx-rss-feed/rss.xml",
+    description="Automated FX Macro + Technical Analysis Feed",
+    language="en",
+)
 
-def main():
-    payload = build_report("sources.yml")
+# Example items (replace these with dynamic content later)
+items = [
+    {
+        "title": "EUR/USD Market Update",
+        "link": "https://www.reuters.com",
+        "description": "EUR/USD consolidates near key levels as traders watch ECB commentary.",
+        "pubdate": datetime.now(timezone.utc),
+    },
+    {
+        "title": "GBP/USD Market Update",
+        "link": "https://www.bloomberg.com",
+        "description": "GBP/USD edges higher on UK data surprises and BoE outlook.",
+        "pubdate": datetime.now(timezone.utc),
+    },
+    {
+        "title": "USD/JPY Market Update",
+        "link": "https://www.fxstreet.com",
+        "description": "USD/JPY trades steady with focus on BoJ policy stance.",
+        "pubdate": datetime.now(timezone.utc),
+    },
+]
 
-    # Save JSON copy
-    with open("output.json", "w", encoding="utf-8") as f:
-        json.dump(payload, f, indent=2, default=str)
+# Add items to RSS feed
+for item in items:
+    feed.add_item(**item)
 
-    # Create RSS feed
-    feed = feedgenerator.Rss201rev2Feed(
-        title=payload["title"],
-        link=payload["link"],
-        description=payload["description"],
-        language="en",
-    )
+# Write RSS XML
+with open("rss.xml", "w", encoding="utf-8") as f:
+    feed.write(f, "utf-8")
 
-    for item in payload["items"]:
-        feed.add_item(
-            title=item["title"],
-            link=item["link"],
-            description=item["description"],
-            pubdate=item["pubdate"],
-        )
+# Also create JSON output
+json_output = {"items": items}
+with open("output.json", "w", encoding="utf-8") as f:
+    json.dump(json_output, f, indent=4, default=str)
 
-    # Write directly to rss.xml
-    with open("rss.xml", "w", encoding="utf-8") as f:
-        feed.write(f, "utf-8")
-
-    print("✅ Feed generated successfully: output.json + rss.xml")
-
-if __name__ == "__main__":
-    main()
+print("✅ Feed generated successfully: output.json + rss.xml")
