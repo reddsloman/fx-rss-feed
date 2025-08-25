@@ -1,42 +1,44 @@
-name: Update FX RSS Feed
+name: Update RSS Feed
 
 on:
   schedule:
-    - cron: "0 * * * *"   # run every hour
-  workflow_dispatch:       # manual trigger
-
-permissions:
-  contents: write          # ✅ allow workflow to push commits
+    - cron: "0 * * * *"   # Run every hour
+  workflow_dispatch:       # Allow manual trigger
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
+      - name: Checkout repo
         uses: actions/checkout@v4
         with:
-          persist-credentials: true
-          token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: false
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.13"
+          python-version: "3.x"
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install feedgenerator requests
 
-      - name: Run feed generator
-        run: |
-          python generate_feed.py
+      - name: Generate RSS feed
+        run: python generate_feed.py
 
-      - name: Commit & Push RSS updates
+      - name: Verify generated files
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          echo "Listing generated files..."
+          ls -lh rss.xml output.json || echo "⚠️ Files missing!"
+          echo "Preview of rss.xml (first 20 lines):"
+          head -n 20 rss.xml || echo "⚠️ rss.xml not found"
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
           git add rss.xml output.json
-          git commit -m "🔄 Auto-update RSS feed ($(date -u '+%Y-%m-%d %H:%M:%S UTC'))" || echo "No changes to commit"
-          git push origin HEAD:main
+          git commit -m "🔄 Auto-update RSS feed ($(date -u +'%Y-%m-%d %H:%M:%S UTC'))" || echo "No changes to commit"
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/reddsloman/fx-rss-feed.git main
