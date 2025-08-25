@@ -1,18 +1,25 @@
 {
-    "generated_at": "2025-08-25T01:14:08.095814Z",
-    "summary": "FX RSS Feed Auto-Update",
-    "sources": {
-        "reuters": [
-            "https://www.reuters.com/markets/currencies/rss",
-            "https://www.reuters.com/markets/asia/rss",
-            "https://www.reuters.com/world/uk/rss",
-            "https://www.reuters.com/world/europe/rss"
-        ],
-        "fxstreet": [
-            "https://www.fxstreet.com/rss"
-        ],
-        "investing": [
-            "https://www.investing.com/rss/news.rss"
-        ]
+  "title": "FX RSS Feed",
+  "link": "https://reddsloman.github.io/fx-rss-feed/rss.xml",
+  "description": "Automated FX Macro + Technical Analysis Feed",
+  "items": [
+    {
+      "title": "EUR/USD Technical Update",
+      "link": "https://www.fxstreet.com/currencies/eurusd",
+      "description": "Latest EUR/USD technical levels and sentiment.",
+      "pubdate": "2025-08-25 01:32:32.347284"
+    },
+    {
+      "title": "GBP/USD Technical Update",
+      "link": "https://www.fxstreet.com/currencies/gbpusd",
+      "description": "Latest GBP/USD technical levels and sentiment.",
+      "pubdate": "2025-08-25 01:32:32.347308"
+    },
+    {
+      "title": "USD/JPY Technical Update",
+      "link": "https://www.fxstreet.com/currencies/usdjpy",
+      "description": "Latest USD/JPY technical levels and sentiment.",
+      "pubdate": "2025-08-25 01:32:32.347319"
     }
+  ]
 }
