@@ -1,21 +1,17 @@
-name: Update FX RSS Feed
+name: Update FX RSS feed
 
 on:
-  workflow_dispatch:  # allows manual trigger
   schedule:
-    - cron: "0 * * * *"  # runs every hour
+    - cron: "0 * * * *"   # runs hourly
+  workflow_dispatch:       # manual trigger
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write   # ✅ allow pushing back to the repo
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repo
         uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}  # ✅ checkout with token
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -28,10 +24,17 @@ jobs:
       - name: Run feed generator
         run: python generate_feed.py
 
-      - name: Commit and push changes
-        uses: stefanzweifel/git-auto-commit-action@v5
+      - name: Upload feed.xml as artifact
+        uses: actions/upload-artifact@v3
         with:
-          commit_message: "Update FX RSS feed"
-          commit_user_name: github-actions
-          commit_user_email: github-actions@github.com
-          branch: main
+          name: rss-feed
+          path: feed.xml
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
+          publish_branch: gh-pages
+          force_orphan: true
+          keep_files: false
