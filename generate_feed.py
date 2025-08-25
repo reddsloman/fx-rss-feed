@@ -1,63 +1,87 @@
 import datetime
-
-# Mock fetch functions (replace with real data fetch)
-def fetch_eurusd():
-    return {
-        "spot": "1.1420",
-        "macro": "Central bank guidance, front-end rates, incoming tier-1 data.",
-        "sentiment": "Watch risk proxies (equities, credit, volatility) for USD impulses.",
-        "calendar": "Next 24–48h data and public remarks.",
-        "technical": "Support 1.1380 | Resistance 1.1480"
-    }
-
-def fetch_gbpusd():
-    return {
-        "spot": "1.3550",
-        "macro": "BoE guidance, UK data flow, USD drivers.",
-        "sentiment": "Track gilt–UST spreads and equity tone.",
-        "calendar": "UK data/events in next 48h.",
-        "technical": "Support 1.3480 | Resistance 1.3620"
-    }
-
-def fetch_usdjpy():
-    return {
-        "spot": "144.40",
-        "macro": "BoJ stance, US–Japan yield gap, risk mood.",
-        "sentiment": "Equities/UST yields driving flows.",
-        "calendar": "Japan/US releases in 24–48h.",
-        "technical": "Support 143.50 | Resistance 145.50"
-    }
+import feedgenerator
 
 
 def generate_post():
-    now = datetime.datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC")
-    eurusd = fetch_eurusd()
-    gbpusd = fetch_gbpusd()
-    usdjpy = fetch_usdjpy()
+    now = datetime.datetime.utcnow()
+    timestamp = now.strftime("%Y-%m-%d %H:%M:%S UTC")
 
-    content = f"""
-**FX Macro & Technical — {now}**
+    # --- Each currency section grouped here ---
+    eurusd = f"""
+EUR/USD — Macro & Technical — {timestamp}
 
-**EUR/USD (Spot: {eurusd['spot']})**  
-- **Macro:** {eurusd['macro']}  
-- **Sentiment:** {eurusd['sentiment']}  
-- **Calendar:** {eurusd['calendar']}  
-- **Technical:** {eurusd['technical']}  
+Macro snapshot
+- Macro watch: central bank guidance, front-end rates, and incoming tier-1 data.
+- Sentiment: track risk proxies (equities, credit, volatility) for USD impulses.
+- Calendar: next 24–48h data and public remarks relevant to the pair.
 
-**GBP/USD (Spot: {gbpusd['spot']})**  
-- **Macro:** {gbpusd['macro']}  
-- **Sentiment:** {gbpusd['sentiment']}  
-- **Calendar:** {gbpusd['calendar']}  
-- **Technical:** {gbpusd['technical']}  
-
-**USD/JPY (Spot: {usdjpy['spot']})**  
-- **Macro:** {usdjpy['macro']}  
-- **Sentiment:** {usdjpy['sentiment']}  
-- **Calendar:** {usdjpy['calendar']}  
-- **Technical:** {usdjpy['technical']}  
+Technical snapshot
+- Reference rails: n/a (no spot)
 """
 
-    return content
+    gbpusd = f"""
+GBP/USD — Macro & Technical — {timestamp}
+
+Macro snapshot
+- Macro watch: BoE forward guidance, UK fiscal stance, and global risk appetite.
+- Sentiment: GBP reacts to both UK-specific and broader USD/risk drivers.
+- Calendar: monitor data and speeches that impact UK and US rates.
+
+Technical snapshot
+- Reference rails: n/a (no spot)
+"""
+
+    usdjpy = f"""
+USD/JPY — Macro & Technical — {timestamp}
+
+Macro snapshot
+- Macro watch: BoJ policy stance, yield spread drivers, and US Treasury direction.
+- Sentiment: track equity vol and US-Japan rate differentials.
+- Calendar: upcoming Japanese and US events relevant to the pair.
+
+Technical snapshot
+- Reference rails: n/a (no spot)
+"""
+
+    # Combine into single grouped post
+    body = f"""
+Generated: {timestamp}
+
+---
+{eurusd}
+---
+{gbpusd}
+---
+{usdjpy}
+"""
+
+    return {
+        "title": f"FX Macro + Technical (Auto) — {timestamp}",
+        "link": "https://github.com/reddsloman/fx-rss-feed",
+        "description": body,
+        "pubdate": now,
+    }
+
+
+def generate_feed():
+    feed = feedgenerator.Rss201rev2Feed(
+        title="FX Macro + Technical (Auto)",
+        link="https://github.com/reddsloman/fx-rss-feed",
+        description="Automated FX macro + technical snapshots for EUR/USD, GBP/USD, USD/JPY",
+        language="en",
+    )
+
+    post = generate_post()
+    feed.add_item(
+        title=post["title"],
+        link=post["link"],
+        description=post["description"],
+        pubdate=post["pubdate"],
+    )
+
+    with open("feed.xml", "w", encoding="utf-8") as f:
+        feed.write(f, "utf-8")
+
 
 if __name__ == "__main__":
-    print(generate_post())
+    generate_feed()
