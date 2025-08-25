@@ -2,11 +2,14 @@ name: Update RSS Feed
 
 on:
   schedule:
-    - cron: "0 * * * *"   # Every hour
+    - cron: "0 * * * *"   # runs every hour
   workflow_dispatch:
 
+permissions:
+  contents: write   # allow pushing back to the repo
+
 jobs:
-  build:
+  update-feed:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,14 +21,14 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.x"
+          python-version: '3.x'
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install feedgenerator requests
+          pip install -r requirements.txt || true
 
-      - name: Generate RSS Feed
+      - name: Generate RSS feed
         run: |
           python generate_feed.py
 
