@@ -1,45 +1,41 @@
 import os
 import json
-import datetime
-import xml.etree.ElementTree as ET
+import yaml
+from datetime import datetime
 
-# ... [rest of your existing code above remains unchanged] ...
+def load_sources(file_path="sources.yml"):
+    """Load sources from YAML file."""
+    with open(file_path, "r") as f:
+        return yaml.safe_load(f)
 
-def save_json(payload, filename="output.json"):
-    with open(filename, "w", encoding="utf-8") as f:
-        json.dump(payload, f, indent=2, ensure_ascii=False)
-    print(f"💾 JSON saved to {filename}")
+def generate_report(sources):
+    """Generate a simple structured FX report from sources."""
+    report = {
+        "timestamp": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S UTC"),
+        "macro": [],
+        "technicals": [],
+        "setups": []
+    }
 
-def save_rss(payload, filename="feed.xml"):
-    rss = ET.Element("rss", version="2.0")
-    channel = ET.SubElement(rss, "channel")
+    # For now we just dump sources — later you can expand to fetch headlines
+    for src in sources.get("sources", []):
+        report["macro"].append({
+            "title": f"Macro update from {src['name']}",
+            "url": src.get("url", ""),
+            "note": "Placeholder until live fetch implemented."
+        })
 
-    ET.SubElement(channel, "title").text = "FX Market Feed"
-    ET.SubElement(channel, "link").text = "https://github.com/reddsloman/fx-rss-feed"
-    ET.SubElement(channel, "description").text = "Automated FX Macro + Technical Analysis Feed"
-    ET.SubElement(channel, "lastBuildDate").text = datetime.datetime.utcnow().strftime("%a, %d %b %Y %H:%M:%S GMT")
+    return report
 
-    for entry in payload.get("entries", []):
-        item = ET.SubElement(channel, "item")
-        ET.SubElement(item, "title").text = entry.get("title", "Untitled")
-        ET.SubElement(item, "description").text = entry.get("summary", "")
-        ET.SubElement(item, "pubDate").text = entry.get("date", datetime.datetime.utcnow().strftime("%a, %d %b %Y %H:%M:%S GMT"))
-        ET.SubElement(item, "link").text = entry.get("link", "https://github.com/reddsloman/fx-rss-feed")
-
-    tree = ET.ElementTree(rss)
-    tree.write(filename, encoding="utf-8", xml_declaration=True)
-    print(f"💾 RSS feed saved to {filename}")
+def save_report(report, output_file="output.json"):
+    """Save the generated report to JSON file."""
+    with open(output_file, "w") as f:
+        json.dump(report, f, indent=2)
 
 def main():
-    # build the report payload
-    payload = build_report("sources.yml")
-
-    # save JSON
-    save_json(payload, "output.json")
-
-    # save RSS
-    save_rss(payload, "feed.xml")
-
+    sources = load_sources("sources.yml")
+    report = generate_report(sources)
+    save_report(report, "output.json")
     print("✅ Report generated successfully.")
 
 if __name__ == "__main__":
