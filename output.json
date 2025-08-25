@@ -1,22 +1,29 @@
 {
-    "items": [
-        {
-            "title": "EUR/USD Market Update",
-            "link": "https://www.reuters.com",
-            "description": "EUR/USD consolidates near key levels as traders watch ECB commentary.",
-            "pubdate": "2025-08-25 02:25:37.610939+00:00"
-        },
-        {
-            "title": "GBP/USD Market Update",
-            "link": "https://www.bloomberg.com",
-            "description": "GBP/USD edges higher on UK data surprises and BoE outlook.",
-            "pubdate": "2025-08-25 02:25:37.610943+00:00"
-        },
-        {
-            "title": "USD/JPY Market Update",
-            "link": "https://www.fxstreet.com",
-            "description": "USD/JPY trades steady with focus on BoJ policy stance.",
-            "pubdate": "2025-08-25 02:25:37.610944+00:00"
-        }
-    ]
+  "generated": "2025-08-25 02:37:26 UTC",
+  "items": [
+    {
+      "symbol": "EUR/USD",
+      "title": "EUR/USD \u2014 Macro & Technical \u2014 2025-08-25 02:37:26 UTC",
+      "link": "https://reddsloman.github.io/fx-rss-feed/rss.xml",
+      "generated": "2025-08-25 02:37:26 UTC",
+      "spot": {},
+      "description_html": "<p><i>Generated: 2025-08-25 02:37:26 UTC</i></p><p><b>Spot</b>: n/a (AV key not set or fetch skipped)</p><h4>Macro snapshot</h4><ul><li>Macro watch: central bank guidance, front-end rates, and incoming tier-1 data.</li><li>Sentiment: track risk proxies (equities, credit, volatility) for USD impulses.</li><li>Calendar: next 24\u201348h data and public remarks relevant to the pair.</li></ul><h4>Technical snapshot</h4><ul><li><b>Reference rails</b>: n/a (no spot)</li></ul><p><i>Note: Levels are mechanical reference rails around spot; no forward-looking statements included.</i></p>"
+    },
+    {
+      "symbol": "GBP/USD",
+      "title": "GBP/USD \u2014 Macro & Technical \u2014 2025-08-25 02:37:26 UTC",
+      "link": "https://reddsloman.github.io/fx-rss-feed/rss.xml",
+      "generated": "2025-08-25 02:37:26 UTC",
+      "spot": {},
+      "description_html": "<p><i>Generated: 2025-08-25 02:37:26 UTC</i></p><p><b>Spot</b>: n/a (AV key not set or fetch skipped)</p><h4>Macro snapshot</h4><ul><li>Macro watch: central bank guidance, front-end rates, and incoming tier-1 data.</li><li>Sentiment: track risk proxies (equities, credit, volatility) for USD impulses.</li><li>Calendar: next 24\u201348h data and public remarks relevant to the pair.</li></ul><h4>Technical snapshot</h4><ul><li><b>Reference rails</b>: n/a (no spot)</li></ul><p><i>Note: Levels are mechanical reference rails around spot; no forward-looking statements included.</i></p>"
+    },
+    {
+      "symbol": "USD/JPY",
+      "title": "USD/JPY \u2014 Macro & Technical \u2014 2025-08-25 02:37:26 UTC",
+      "link": "https://reddsloman.github.io/fx-rss-feed/rss.xml",
+      "generated": "2025-08-25 02:37:26 UTC",
+      "spot": {},
+      "description_html": "<p><i>Generated: 2025-08-25 02:37:26 UTC</i></p><p><b>Spot</b>: n/a (AV key not set or fetch skipped)</p><h4>Macro snapshot</h4><ul><li>Macro watch: central bank guidance, front-end rates, and incoming tier-1 data.</li><li>Sentiment: track risk proxies (equities, credit, volatility) for USD impulses.</li><li>Calendar: next 24\u201348h data and public remarks relevant to the pair.</li></ul><h4>Technical snapshot</h4><ul><li><b>Reference rails</b>: n/a (no spot)</li></ul><p><i>Note: Levels are mechanical reference rails around spot; no forward-looking statements included.</i></p>"
+    }
+  ]
 }
