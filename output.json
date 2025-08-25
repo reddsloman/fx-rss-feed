@@ -1,25 +1,22 @@
 {
-  "title": "FX RSS Feed",
-  "link": "https://reddsloman.github.io/fx-rss-feed/rss.xml",
-  "description": "Automated FX Macro + Technical Analysis Feed",
-  "items": [
-    {
-      "title": "EUR/USD Technical Update",
-      "link": "https://www.fxstreet.com/currencies/eurusd",
-      "description": "Latest EUR/USD technical levels and sentiment.",
-      "pubdate": "2025-08-25 01:44:24.316448"
-    },
-    {
-      "title": "GBP/USD Technical Update",
-      "link": "https://www.fxstreet.com/currencies/gbpusd",
-      "description": "Latest GBP/USD technical levels and sentiment.",
-      "pubdate": "2025-08-25 01:44:24.316470"
-    },
-    {
-      "title": "USD/JPY Technical Update",
-      "link": "https://www.fxstreet.com/currencies/usdjpy",
-      "description": "Latest USD/JPY technical levels and sentiment.",
-      "pubdate": "2025-08-25 01:44:24.316482"
-    }
-  ]
+    "items": [
+        {
+            "title": "EUR/USD Market Update",
+            "link": "https://www.reuters.com",
+            "description": "EUR/USD consolidates near key levels as traders watch ECB commentary.",
+            "pubdate": "2025-08-25 02:02:46.610631+00:00"
+        },
+        {
+            "title": "GBP/USD Market Update",
+            "link": "https://www.bloomberg.com",
+            "description": "GBP/USD edges higher on UK data surprises and BoE outlook.",
+            "pubdate": "2025-08-25 02:02:46.610635+00:00"
+        },
+        {
+            "title": "USD/JPY Market Update",
+            "link": "https://www.fxstreet.com",
+            "description": "USD/JPY trades steady with focus on BoJ policy stance.",
+            "pubdate": "2025-08-25 02:02:46.610636+00:00"
+        }
+    ]
 }
