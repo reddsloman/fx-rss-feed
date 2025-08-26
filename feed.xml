@@ -1,15 +1,2 @@
-<?xml version="1.0" ?>
-<rss version="2.0">
-  <channel>
-    <title>FX Macro + Technical RSS Feed</title>
-    <link>https://reddsloman.github.io/fx-rss-feed/feed.xml</link>
-    <description>Live updates with FX macro fundamentals, sentiment, technicals, and trade setups.</description>
-    <lastBuildDate>Tue, 26 Aug 2025 16:18:55 +0000</lastBuildDate>
-    <item>
-      <title>FX Market Update 2025-08-26 16:18:55 UTC</title>
-      <link>https://www.reuters.com/markets/currencies/</link>
-      <description>Macro fundamentals, sentiment, and technical trade setups updated.</description>
-      <pubDate>2025-08-26 16:18:55 UTC</pubDate>
-    </item>
-  </channel>
-</rss>
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>FX Macro + Technical Analysis Feed</title><link>https://reddsloman.github.io/fx-rss-feed/</link><description>Automated updates on EUR/USD, GBP/USD, and USD/JPY with macro fundamentals and technical analysis.</description><language>en</language><lastBuildDate>Tue, 26 Aug 2025 16:44:02 +0000</lastBuildDate><item><title>EUR/USD Technical Levels &amp; Macro Update</title><link>https://reddsloman.github.io/fx-rss-feed/eurusd</link><description>Latest EUR/USD support, resistance, and macro drivers.</description><pubDate>Tue, 26 Aug 2025 16:44:02 +0000</pubDate></item><item><title>GBP/USD Trading Setup &amp; Market Sentiment</title><link>https://reddsloman.github.io/fx-rss-feed/gbpusd</link><description>Updated GBP/USD orderflow levels with fundamental bias.</description><pubDate>Tue, 26 Aug 2025 16:44:02 +0000</pubDate></item><item><title>USD/JPY Key Levels &amp; Policy Divergence Watch</title><link>https://reddsloman.github.io/fx-rss-feed/usdjpy</link><description>USD/JPY focus on Fed-BoJ divergence and near-term pivot levels.</description><pubDate>Tue, 26 Aug 2025 16:44:02 +0000</pubDate></item></channel></rss>
