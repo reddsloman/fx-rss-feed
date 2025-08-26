@@ -1,2 +1,26 @@
-<?xml version="1.0" encoding="utf-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>FX Macro + Technical Analysis Feed</title><link>https://reddsloman.github.io/fx-rss-feed/</link><description>Automated updates on EUR/USD, GBP/USD, and USD/JPY with macro fundamentals and technical analysis.</description><language>en</language><lastBuildDate>Tue, 26 Aug 2025 16:47:58 +0000</lastBuildDate><item><title>EUR/USD Technical Levels &amp; Macro Update</title><link>https://reddsloman.github.io/fx-rss-feed/eurusd</link><description>Latest EUR/USD support, resistance, and macro drivers.</description><pubDate>Tue, 26 Aug 2025 16:47:58 +0000</pubDate></item><item><title>GBP/USD Trading Setup &amp; Market Sentiment</title><link>https://reddsloman.github.io/fx-rss-feed/gbpusd</link><description>Updated GBP/USD orderflow levels with fundamental bias.</description><pubDate>Tue, 26 Aug 2025 16:47:58 +0000</pubDate></item><item><title>USD/JPY Key Levels &amp; Policy Divergence Watch</title><link>https://reddsloman.github.io/fx-rss-feed/usdjpy</link><description>USD/JPY focus on Fed-BoJ divergence and near-term pivot levels.</description><pubDate>Tue, 26 Aug 2025 16:47:58 +0000</pubDate></item></channel></rss>
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+  <title>FX Macro + Technical RSS Feed</title>
+  <link>https://reddsloman.github.io/fx-rss-feed/feed.xml</link>
+  <description>
+    Hourly FX macro + technical updates covering USD, EUR, GBP, JPY with bond market flows, 
+    central bank outlooks, and intraday trade setups.
+  </description>
+  <lastBuildDate>Tue, 26 Aug 2025 16:53:16 +0000</lastBuildDate>
+
+  <item>
+    <title>FX Market Snapshot — Aug 26, 2025 16:53 UTC</title>
+    <link>https://www.reuters.com/markets/currencies/</link>
+    <guid isPermaLink="false">fx-20250826-165316</guid>
+    <description><![CDATA[
+      <b>EUR/USD — ECB tone steady, Bund yields capped. Key levels: 1.1400 support, 1.1480 resistance.</b><br/>
+      <b>GBP/USD — BoE cautious, UK gilt yields weighed. Levels: 1.3520 pivot, 1.3600 resistance.</b><br/>
+      <b>USD/JPY — BoJ stance unchanged, JGB yields steady. Range: 143.50–144.80.</b><br/>
+      <b>USD — Fed outlook remains restrictive; US Treasury yields stable. Dollar index capped under 102.50.</b><br/>
+    ]]></description>
+    <pubDate>Tue, 26 Aug 2025 16:53:16 +0000</pubDate>
+  </item>
+
+</channel>
+</rss>
