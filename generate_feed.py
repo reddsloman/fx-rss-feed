@@ -1,60 +1,73 @@
 import datetime
-import xml.etree.ElementTree as ET
 import os
 
-FEED_PATH = "rss.xml"
-SITE_LINK = "https://reddsloman.github.io/fx-rss-feed/feed.xml"
+FEED_FILE = "feed.xml"
+FEED_TITLE = "FX RSS Feed"
+FEED_LINK = "https://reddsloman.github.io/fx-rss-feed/feed.xml"
+FEED_DESC = "Automated FX Market Summaries and Technical Analysis"
 
-def build_feed():
-    # Current UTC timestamp
+def generate_item(content: str) -> str:
     now = datetime.datetime.utcnow()
-    now_rfc2822 = now.strftime("%a, %d %b %Y %H:%M:%S GMT")
-    now_iso = now.strftime("%Y-%m-%d %H:%M:%S UTC")
+    pub_date = now.strftime("%a, %d %b %Y %H:%M:%S +0000")
+    guid = f"fxrss-{now.strftime('%Y%m%d%H%M%S')}"
+    title = f"FX Market Update — {now.strftime('%Y-%m-%d %H:%M UTC')}"
+    link = f"https://reddsloman.github.io/fx-rss-feed/posts/{guid}.html"
 
-    # --------- CONTENT PLACEHOLDER (replace with live data later) ---------
-    eurusd_macro = "Macro: ECB guidance, Bund yields, eurozone data watch."
-    eurusd_tech = "Tech: key rails around spot EUR/USD (support/resistance)."
-
-    gbpusd_macro = "Macro: BoE policy expectations, gilt curve, UK CPI flows."
-    gbpusd_tech = "Tech: GBP/USD support/resistance rails."
-
-    usdjpy_macro = "Macro: BoJ policy stance, JGB yields, risk sentiment flows."
-    usdjpy_tech = "Tech: USD/JPY reference rails around spot."
-
-    # Combined body
-    body = f"""
-    <h3>EUR/USD</h3>
-    <p>{eurusd_macro}</p>
-    <p>{eurusd_tech}</p>
-
-    <h3>GBP/USD</h3>
-    <p>{gbpusd_macro}</p>
-    <p>{gbpusd_tech}</p>
-
-    <h3>USD/JPY</h3>
-    <p>{usdjpy_macro}</p>
-    <p>{usdjpy_tech}</p>
+    item = f"""
+    <item>
+      <title>{title}</title>
+      <link>{link}</link>
+      <description><![CDATA[
+      {content}
+      ]]></description>
+      <pubDate>{pub_date}</pubDate>
+      <guid isPermaLink="false">{guid}</guid>
+    </item>
     """
+    return item.strip()
 
-    # --------- BUILD RSS ---------
-    rss = ET.Element("rss", version="2.0")
-    channel = ET.SubElement(rss, "channel")
+def generate_feed(content: str):
+    now = datetime.datetime.utcnow()
+    build_date = now.strftime("%a, %d %b %Y %H:%M:%S +0000")
 
-    ET.SubElement(channel, "title").text = "FX RSS Feed"
-    ET.SubElement(channel, "link").text = SITE_LINK
-    ET.SubElement(channel, "description").text = "Automated FX Market Summaries and Technical Analysis"
-    ET.SubElement(channel, "lastBuildDate").text = now_rfc2822
+    # If feed exists, load old items
+    items = []
+    if os.path.exists(FEED_FILE):
+        with open(FEED_FILE, "r", encoding="utf-8") as f:
+            data = f.read()
+            start = data.find("<item>")
+            if start != -1:
+                items_section = data[start:]
+                items = items_section.split("</item>")
+                items = [i + "</item>" for i in items if "<item>" in i]
 
-    # Single combined item
-    item = ET.SubElement(channel, "item")
-    ET.SubElement(item, "title").text = f"FX Macro & Technical — {now_iso}"
-    ET.SubElement(item, "link").text = SITE_LINK
-    ET.SubElement(item, "pubDate").text = now_rfc2822
-    ET.SubElement(item, "description").text = body
+    # Prepend new item
+    new_item = generate_item(content)
+    items.insert(0, new_item)
 
-    # Save to file
-    tree = ET.ElementTree(rss)
-    tree.write(FEED_PATH, encoding="utf-8", xml_declaration=True)
+    # Limit history (optional, keep last 20 posts)
+    items = items[:20]
+
+    rss = f"""<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+<title>{FEED_TITLE}</title>
+<link>{FEED_LINK}</link>
+<description>{FEED_DESC}</description>
+<lastBuildDate>{build_date}</lastBuildDate>
+{''.join(items)}
+</channel>
+</rss>
+"""
+    with open(FEED_FILE, "w", encoding="utf-8") as f:
+        f.write(rss)
 
 if __name__ == "__main__":
-    build_feed()
+    # Example content (replace with actual macro+technical summary)
+    sample_content = """
+    EUR/USD — Macro & Technical snapshot
+    GBP/USD — Macro & Technical snapshot
+    USD/JPY — Macro & Technical snapshot
+    Generated automatically.
+    """
+    generate_feed(sample_content)
