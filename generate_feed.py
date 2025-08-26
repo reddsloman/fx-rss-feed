@@ -1,41 +1,52 @@
 import datetime
-import os
 
-FEED_PATH = "feed.xml"
-
-def generate_feed():
+def generate_feed(items, output_file="feed.xml"):
     now = datetime.datetime.utcnow()
-    pub_date = now.strftime("%a, %d %b %Y %H:%M:%S GMT")
-    guid = now.strftime("%Y%m%d-%H%M%S")
+    build_date = now.strftime("%a, %d %b %Y %H:%M:%S GMT")
 
-    # Example market summary (you can replace this with live fetch later)
-    market_summary = """USD: DXY consolidates near 104.80 as markets await Powell at Jackson Hole.<br>
-    EUR/USD: Holding 1.1420 support, resistance 1.1500.<br>
-    GBP/USD: Supported near 1.3550, capped at 1.3625.<br>
-    USD/JPY: Rangebound 144.20–145.00.<br>"""
-
-    rss_content = f"""<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0">
+    rss = f"""<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+     xmlns:atom="http://www.w3.org/2005/Atom">
 <channel>
-<title>FX RSS Feed</title>
-<link>https://reddsloman.github.io/fx-rss-feed/feed.xml</link>
-<description>Automated FX Market Summaries and Technical Analysis</description>
-<lastBuildDate>{pub_date}</lastBuildDate>
-
-<item>
-  <title>FX Market Update – {pub_date}</title>
+  <title>FX RSS Feed</title>
   <link>https://reddsloman.github.io/fx-rss-feed/feed.xml</link>
-  <guid isPermaLink="false">{guid}</guid>
-  <pubDate>{pub_date}</pubDate>
-  <description><![CDATA[{market_summary}]]></description>
-</item>
+  <description>Automated FX Market Summaries and Technical Analysis</description>
+  <lastBuildDate>{build_date}</lastBuildDate>
+  <atom:link href="https://reddsloman.github.io/fx-rss-feed/feed.xml" 
+             rel="self" 
+             type="application/rss+xml" />
+"""
 
-</channel>
+    # Add items
+    for item in items:
+        rss += f"""  <item>
+    <title>{item['title']}</title>
+    <link>{item['link']}</link>
+    <guid isPermaLink="false">{item['guid']}</guid>
+    <pubDate>{item['pubDate']}</pubDate>
+    <description><![CDATA[{item['description']}]]></description>
+  </item>
+"""
+
+    rss += """</channel>
 </rss>
 """
 
-    with open(FEED_PATH, "w", encoding="utf-8") as f:
-        f.write(rss_content)
+    with open(output_file, "w", encoding="utf-8") as f:
+        f.write(rss)
+
+    print(f"✅ RSS feed generated: {output_file}")
+
 
 if __name__ == "__main__":
-    generate_feed()
+    # Example usage
+    items = [
+        {
+            "title": "FX Market Update – Sample",
+            "link": "https://reddsloman.github.io/fx-rss-feed/feed.xml",
+            "guid": "20250826-022252",
+            "pubDate": "Tue, 26 Aug 2025 02:22:52 GMT",
+            "description": "USD: DXY consolidates near 104.80.<br>EUR/USD: 1.1420 support, 1.1500 resistance."
+        }
+    ]
+    generate_feed(items)
