@@ -1,87 +1,60 @@
 import datetime
-import feedgenerator
+import xml.etree.ElementTree as ET
+import os
 
+FEED_PATH = "rss.xml"
+SITE_LINK = "https://reddsloman.github.io/fx-rss-feed/feed.xml"
 
-def generate_post():
+def build_feed():
+    # Current UTC timestamp
     now = datetime.datetime.utcnow()
-    timestamp = now.strftime("%Y-%m-%d %H:%M:%S UTC")
+    now_rfc2822 = now.strftime("%a, %d %b %Y %H:%M:%S GMT")
+    now_iso = now.strftime("%Y-%m-%d %H:%M:%S UTC")
 
-    # --- Each currency section grouped here ---
-    eurusd = f"""
-EUR/USD — Macro & Technical — {timestamp}
+    # --------- CONTENT PLACEHOLDER (replace with live data later) ---------
+    eurusd_macro = "Macro: ECB guidance, Bund yields, eurozone data watch."
+    eurusd_tech = "Tech: key rails around spot EUR/USD (support/resistance)."
 
-Macro snapshot
-- Macro watch: central bank guidance, front-end rates, and incoming tier-1 data.
-- Sentiment: track risk proxies (equities, credit, volatility) for USD impulses.
-- Calendar: next 24–48h data and public remarks relevant to the pair.
+    gbpusd_macro = "Macro: BoE policy expectations, gilt curve, UK CPI flows."
+    gbpusd_tech = "Tech: GBP/USD support/resistance rails."
 
-Technical snapshot
-- Reference rails: n/a (no spot)
-"""
+    usdjpy_macro = "Macro: BoJ policy stance, JGB yields, risk sentiment flows."
+    usdjpy_tech = "Tech: USD/JPY reference rails around spot."
 
-    gbpusd = f"""
-GBP/USD — Macro & Technical — {timestamp}
-
-Macro snapshot
-- Macro watch: BoE forward guidance, UK fiscal stance, and global risk appetite.
-- Sentiment: GBP reacts to both UK-specific and broader USD/risk drivers.
-- Calendar: monitor data and speeches that impact UK and US rates.
-
-Technical snapshot
-- Reference rails: n/a (no spot)
-"""
-
-    usdjpy = f"""
-USD/JPY — Macro & Technical — {timestamp}
-
-Macro snapshot
-- Macro watch: BoJ policy stance, yield spread drivers, and US Treasury direction.
-- Sentiment: track equity vol and US-Japan rate differentials.
-- Calendar: upcoming Japanese and US events relevant to the pair.
-
-Technical snapshot
-- Reference rails: n/a (no spot)
-"""
-
-    # Combine into single grouped post
+    # Combined body
     body = f"""
-Generated: {timestamp}
+    <h3>EUR/USD</h3>
+    <p>{eurusd_macro}</p>
+    <p>{eurusd_tech}</p>
 
----
-{eurusd}
----
-{gbpusd}
----
-{usdjpy}
-"""
+    <h3>GBP/USD</h3>
+    <p>{gbpusd_macro}</p>
+    <p>{gbpusd_tech}</p>
 
-    return {
-        "title": f"FX Macro + Technical (Auto) — {timestamp}",
-        "link": "https://github.com/reddsloman/fx-rss-feed",
-        "description": body,
-        "pubdate": now,
-    }
+    <h3>USD/JPY</h3>
+    <p>{usdjpy_macro}</p>
+    <p>{usdjpy_tech}</p>
+    """
 
+    # --------- BUILD RSS ---------
+    rss = ET.Element("rss", version="2.0")
+    channel = ET.SubElement(rss, "channel")
 
-def generate_feed():
-    feed = feedgenerator.Rss201rev2Feed(
-        title="FX Macro + Technical (Auto)",
-        link="https://github.com/reddsloman/fx-rss-feed",
-        description="Automated FX macro + technical snapshots for EUR/USD, GBP/USD, USD/JPY",
-        language="en",
-    )
+    ET.SubElement(channel, "title").text = "FX RSS Feed"
+    ET.SubElement(channel, "link").text = SITE_LINK
+    ET.SubElement(channel, "description").text = "Automated FX Market Summaries and Technical Analysis"
+    ET.SubElement(channel, "lastBuildDate").text = now_rfc2822
 
-    post = generate_post()
-    feed.add_item(
-        title=post["title"],
-        link=post["link"],
-        description=post["description"],
-        pubdate=post["pubdate"],
-    )
+    # Single combined item
+    item = ET.SubElement(channel, "item")
+    ET.SubElement(item, "title").text = f"FX Macro & Technical — {now_iso}"
+    ET.SubElement(item, "link").text = SITE_LINK
+    ET.SubElement(item, "pubDate").text = now_rfc2822
+    ET.SubElement(item, "description").text = body
 
-    with open("feed.xml", "w", encoding="utf-8") as f:
-        feed.write(f, "utf-8")
-
+    # Save to file
+    tree = ET.ElementTree(rss)
+    tree.write(FEED_PATH, encoding="utf-8", xml_declaration=True)
 
 if __name__ == "__main__":
-    generate_feed()
+    build_feed()
