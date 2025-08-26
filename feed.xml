@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0"
-     xmlns:atom="http://www.w3.org/2005/Atom">
-<channel>
-  <title>FX RSS Feed</title>
-  <link>https://reddsloman.github.io/fx-rss-feed/feed.xml</link>
-  <description>Automated FX Market Summaries and Technical Analysis</description>
-  <lastBuildDate>Tue, 26 Aug 2025 02:32:15 GMT</lastBuildDate>
-  <atom:link href="https://reddsloman.github.io/fx-rss-feed/feed.xml" 
-             rel="self" 
-             type="application/rss+xml" />
-  <item>
-    <title>FX Market Update – Sample</title>
-    <link>https://reddsloman.github.io/fx-rss-feed/feed.xml</link>
-    <guid isPermaLink="false">20250826-022252</guid>
-    <pubDate>Tue, 26 Aug 2025 02:22:52 GMT</pubDate>
-    <description><![CDATA[USD: DXY consolidates near 104.80.<br>EUR/USD: 1.1420 support, 1.1500 resistance.]]></description>
-  </item>
-</channel>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>FX Market RSS Feed</title>
+    <link>https://reddsloman.github.io/fx-rss-feed/</link>
+    <description>Automated FX market updates with macro, sentiment, and technical analysis</description>
+    <language>en</language>
+    <lastBuildDate>Tue, 26 Aug 2025 02:55:36 +0000</lastBuildDate>
+    <pubDate>Tue, 26 Aug 2025 02:55:36 +0000</pubDate>
+    <atom:link href="https://reddsloman.github.io/fx-rss-feed/feed.xml" rel="self" type="application/rss+xml" />
+
+    <item>
+      <title>Sample FX Update</title>
+      <link>https://reddsloman.github.io/fx-rss-feed/</link>
+      <guid isPermaLink="false">Tue, 26 Aug 2025 02:55:36 +0000</guid>
+      <pubDate>Tue, 26 Aug 2025 02:55:36 +0000</pubDate>
+      <description>EUR/USD, GBP/USD, USD/JPY market update snapshot.</description>
+    </item>
+
+  </channel>
 </rss>
