@@ -1,51 +1,54 @@
-import feedgenerator
-from datetime import datetime, timezone
-import os
+import datetime
+import pytz
+from pathlib import Path
+
+# Output file
+output_file = Path("feed.xml")
 
 def generate_feed():
-    # Always use current UTC time for feed freshness
-    now = datetime.now(timezone.utc)
+    # Current UTC time
+    now = datetime.datetime.now(pytz.UTC)
+    timestamp = now.strftime("%Y%m%d-%H%M%S")
+    pub_date = now.strftime("%a, %d %b %Y %H:%M:%S +0000")
 
-    feed = feedgenerator.Rss201rev2Feed(
-        title="FX Macro + Technical Analysis Feed",
-        link="https://reddsloman.github.io/fx-rss-feed/",
-        description="Automated updates on EUR/USD, GBP/USD, and USD/JPY with macro fundamentals and technical analysis.",
-        language="en",
-        lastBuildDate=now  # Force refresh each run
-    )
+    # Sample FX content (this should later pull live data)
+    eurusd = "EUR/USD — ECB tone steady, Bund yields capped. Key levels: 1.1400 support, 1.1480 resistance."
+    gbpusd = "GBP/USD — BoE cautious, UK gilt yields weighed. Levels: 1.3520 pivot, 1.3600 resistance."
+    usdjpy = "USD/JPY — BoJ stance unchanged, JGB yields steady. Range: 143.50–144.80."
+    usd = "USD — Fed outlook remains restrictive; US Treasury yields stable. Dollar index capped under 102.50."
 
-    # Example items - in real workflow you’ll fetch from your scraping/summary logic
-    items = [
-        {
-            "title": "EUR/USD Technical Levels & Macro Update",
-            "link": "https://reddsloman.github.io/fx-rss-feed/eurusd",
-            "description": "Latest EUR/USD support, resistance, and macro drivers.",
-        },
-        {
-            "title": "GBP/USD Trading Setup & Market Sentiment",
-            "link": "https://reddsloman.github.io/fx-rss-feed/gbpusd",
-            "description": "Updated GBP/USD orderflow levels with fundamental bias.",
-        },
-        {
-            "title": "USD/JPY Key Levels & Policy Divergence Watch",
-            "link": "https://reddsloman.github.io/fx-rss-feed/usdjpy",
-            "description": "USD/JPY focus on Fed-BoJ divergence and near-term pivot levels.",
-        }
-    ]
+    # RSS XML
+    rss = f"""<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+  <title>FX Macro + Technical RSS Feed</title>
+  <link>https://reddsloman.github.io/fx-rss-feed/feed.xml</link>
+  <description>
+    Hourly FX macro + technical updates covering USD, EUR, GBP, JPY with bond market flows, 
+    central bank outlooks, and intraday trade setups.
+  </description>
+  <lastBuildDate>{pub_date}</lastBuildDate>
 
-    # Add feed items with fresh pubDate
-    for item in items:
-        feed.add_item(
-            title=item["title"],
-            link=item["link"],
-            description=item["description"],
-            pubdate=now  # Always new timestamp
-        )
+  <item>
+    <title>FX Market Snapshot — {now.strftime("%b %d, %Y %H:%M UTC")}</title>
+    <link>https://www.reuters.com/markets/currencies/</link>
+    <guid isPermaLink="false">fx-{timestamp}</guid>
+    <description><![CDATA[
+      <b>{eurusd}</b><br/>
+      <b>{gbpusd}</b><br/>
+      <b>{usdjpy}</b><br/>
+      <b>{usd}</b><br/>
+    ]]></description>
+    <pubDate>{pub_date}</pubDate>
+  </item>
 
-    # Write feed.xml
-    output_path = os.path.join(os.path.dirname(__file__), "feed.xml")
-    with open(output_path, "w", encoding="utf-8") as f:
-        feed.write(f, "utf-8")
+</channel>
+</rss>
+"""
+
+    # Write file
+    output_file.write_text(rss, encoding="utf-8")
+    print(f"✅ Feed updated at {pub_date} with GUID fx-{timestamp}")
 
 if __name__ == "__main__":
     generate_feed()
