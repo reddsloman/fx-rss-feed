@@ -1,17 +1,22 @@
 name: Update RSS Feed
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:   # manual trigger
   schedule:
-    - cron: "0 * * * *"  # runs every hour
+    - cron: "0 * * * *"   # every hour
+
+permissions:
+  contents: write   # ✅ allow pushing commits
 
 jobs:
-  build:
+  update-feed:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -34,5 +39,5 @@ jobs:
       - name: Commit & push feed
         run: |
           git add feed.xml
-          git commit -m "Auto-update feed $(date -u)" || echo "No changes to commit"
+          git commit -m "Auto-update feed $(date -u)" --allow-empty
           git push
