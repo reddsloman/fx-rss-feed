@@ -1,42 +1,62 @@
+import feedparser
 from datetime import datetime, timezone
-import xml.etree.ElementTree as ET
+from xml.etree.ElementTree import Element, SubElement, tostring
+from xml.dom import minidom
+import requests
 
+# ---------- CONFIG ----------
+FEED_TITLE = "FX Macro + Technical RSS Feed"
+FEED_LINK = "https://reddsloman.github.io/fx-rss-feed/feed.xml"
+FEED_DESCRIPTION = "Live updates with FX macro fundamentals, sentiment, technicals, and trade setups."
+OUTPUT_FILE = "feed.xml"
+
+# ---------- UTILS ----------
+def prettify_xml(elem):
+    """Return a pretty-printed XML string for the Element."""
+    rough_string = tostring(elem, "utf-8")
+    reparsed = minidom.parseString(rough_string)
+    return reparsed.toprettyxml(indent="  ")
+
+def fetch_articles():
+    """Stub for fetching live FX news & analysis (replace with API calls if needed)."""
+    # Example placeholder entries to test updates
+    now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
+    return [
+        {
+            "title": f"FX Market Update {now}",
+            "link": "https://www.reuters.com/markets/currencies/",
+            "description": "Macro fundamentals, sentiment, and technical trade setups updated.",
+            "pubDate": now,
+        }
+    ]
+
+# ---------- MAIN ----------
 def generate_feed():
+    rss = Element("rss", version="2.0")
+    channel = SubElement(rss, "channel")
+
+    # Metadata
+    SubElement(channel, "title").text = FEED_TITLE
+    SubElement(channel, "link").text = FEED_LINK
+    SubElement(channel, "description").text = FEED_DESCRIPTION
+
+    # Force-update timestamp every run
     now = datetime.now(timezone.utc)
-    # RFC-822 format required by RSS
-    now_rfc822 = now.strftime("%a, %d %b %Y %H:%M:%S GMT")
-    # For GUID uniqueness
-    now_iso = now.strftime("%Y%m%d%H%M%S")
+    SubElement(channel, "lastBuildDate").text = now.strftime("%a, %d %b %Y %H:%M:%S %z")
 
-    rss = ET.Element("rss", version="2.0")
-    channel = ET.SubElement(rss, "channel")
+    # Articles
+    articles = fetch_articles()
+    for art in articles:
+        item = SubElement(channel, "item")
+        SubElement(item, "title").text = art["title"]
+        SubElement(item, "link").text = art["link"]
+        SubElement(item, "description").text = art["description"]
+        SubElement(item, "pubDate").text = art["pubDate"]
 
-    # Channel metadata
-    ET.SubElement(channel, "title").text = "FX Macro & Technical"
-    ET.SubElement(channel, "link").text = "https://reddsloman.github.io/fx-rss-feed/feed.xml"
-    ET.SubElement(channel, "description").text = "Auto-updating FX Macro + Technical Analysis feed"
-    ET.SubElement(channel, "lastBuildDate").text = now_rfc822
-    ET.SubElement(channel, "pubDate").text = now_rfc822
-    ET.SubElement(channel, "generator").text = "Custom Python RSS Generator"
+    # Save XML
+    xml_str = prettify_xml(rss)
+    with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
+        f.write(xml_str)
 
-    # Example item
-    item = ET.SubElement(channel, "item")
-    ET.SubElement(item, "title").text = f"FX Macro + Technical (Auto) / {now_rfc822}"
-    ET.SubElement(item, "link").text = "https://reddsloman.github.io/fx-rss-feed/"
-    ET.SubElement(item, "guid", isPermaLink="false").text = f"fx-feed-{now_iso}"
-    ET.SubElement(item, "pubDate").text = now_rfc822
-    ET.SubElement(item, "description").text = """
-    <b>EUR/USD</b><br/>
-    Macro: ECB guidance, Bund yields, eurozone data watch.<br/>
-    Tech: Key support/resistance levels.<br/><br/>
-    <b>GBP/USD</b><br/>
-    Macro: BoE policy expectations, gilt curve, UK CPI flows.<br/>
-    Tech: GBP/USD support/resistance.<br/><br/>
-    <b>USD/JPY</b><br/>
-    Macro: BoJ policy stance, JGB yields, risk sentiment flows.<br/>
-    Tech: USD/JPY key reference levels.
-    """
-
-    # Write to feed.xml
-    tree = ET.ElementTree(rss)
-    tree.write("feed.xml", encoding="utf-8", xml_declaration=True)
+if __name__ == "__main__":
+    generate_feed()
