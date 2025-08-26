@@ -1,62 +1,51 @@
-import feedparser
+import feedgenerator
 from datetime import datetime, timezone
-from xml.etree.ElementTree import Element, SubElement, tostring
-from xml.dom import minidom
-import requests
+import os
 
-# ---------- CONFIG ----------
-FEED_TITLE = "FX Macro + Technical RSS Feed"
-FEED_LINK = "https://reddsloman.github.io/fx-rss-feed/feed.xml"
-FEED_DESCRIPTION = "Live updates with FX macro fundamentals, sentiment, technicals, and trade setups."
-OUTPUT_FILE = "feed.xml"
+def generate_feed():
+    # Always use current UTC time for feed freshness
+    now = datetime.now(timezone.utc)
 
-# ---------- UTILS ----------
-def prettify_xml(elem):
-    """Return a pretty-printed XML string for the Element."""
-    rough_string = tostring(elem, "utf-8")
-    reparsed = minidom.parseString(rough_string)
-    return reparsed.toprettyxml(indent="  ")
+    feed = feedgenerator.Rss201rev2Feed(
+        title="FX Macro + Technical Analysis Feed",
+        link="https://reddsloman.github.io/fx-rss-feed/",
+        description="Automated updates on EUR/USD, GBP/USD, and USD/JPY with macro fundamentals and technical analysis.",
+        language="en",
+        lastBuildDate=now  # Force refresh each run
+    )
 
-def fetch_articles():
-    """Stub for fetching live FX news & analysis (replace with API calls if needed)."""
-    # Example placeholder entries to test updates
-    now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
-    return [
+    # Example items - in real workflow you’ll fetch from your scraping/summary logic
+    items = [
         {
-            "title": f"FX Market Update {now}",
-            "link": "https://www.reuters.com/markets/currencies/",
-            "description": "Macro fundamentals, sentiment, and technical trade setups updated.",
-            "pubDate": now,
+            "title": "EUR/USD Technical Levels & Macro Update",
+            "link": "https://reddsloman.github.io/fx-rss-feed/eurusd",
+            "description": "Latest EUR/USD support, resistance, and macro drivers.",
+        },
+        {
+            "title": "GBP/USD Trading Setup & Market Sentiment",
+            "link": "https://reddsloman.github.io/fx-rss-feed/gbpusd",
+            "description": "Updated GBP/USD orderflow levels with fundamental bias.",
+        },
+        {
+            "title": "USD/JPY Key Levels & Policy Divergence Watch",
+            "link": "https://reddsloman.github.io/fx-rss-feed/usdjpy",
+            "description": "USD/JPY focus on Fed-BoJ divergence and near-term pivot levels.",
         }
     ]
 
-# ---------- MAIN ----------
-def generate_feed():
-    rss = Element("rss", version="2.0")
-    channel = SubElement(rss, "channel")
+    # Add feed items with fresh pubDate
+    for item in items:
+        feed.add_item(
+            title=item["title"],
+            link=item["link"],
+            description=item["description"],
+            pubdate=now  # Always new timestamp
+        )
 
-    # Metadata
-    SubElement(channel, "title").text = FEED_TITLE
-    SubElement(channel, "link").text = FEED_LINK
-    SubElement(channel, "description").text = FEED_DESCRIPTION
-
-    # Force-update timestamp every run
-    now = datetime.now(timezone.utc)
-    SubElement(channel, "lastBuildDate").text = now.strftime("%a, %d %b %Y %H:%M:%S %z")
-
-    # Articles
-    articles = fetch_articles()
-    for art in articles:
-        item = SubElement(channel, "item")
-        SubElement(item, "title").text = art["title"]
-        SubElement(item, "link").text = art["link"]
-        SubElement(item, "description").text = art["description"]
-        SubElement(item, "pubDate").text = art["pubDate"]
-
-    # Save XML
-    xml_str = prettify_xml(rss)
-    with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
-        f.write(xml_str)
+    # Write feed.xml
+    output_path = os.path.join(os.path.dirname(__file__), "feed.xml")
+    with open(output_path, "w", encoding="utf-8") as f:
+        feed.write(f, "utf-8")
 
 if __name__ == "__main__":
     generate_feed()
