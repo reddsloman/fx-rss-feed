@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0">
+<rss version="2.0"
+     xmlns:atom="http://www.w3.org/2005/Atom">
 <channel>
-<title>FX RSS Feed</title>
-<link>https://reddsloman.github.io/fx-rss-feed/feed.xml</link>
-<description>Automated FX Market Summaries and Technical Analysis</description>
-<lastBuildDate>Tue, 26 Aug 2025 02:22:52 GMT</lastBuildDate>
-
-<item>
-  <title>FX Market Update – Tue, 26 Aug 2025 02:22:52 GMT</title>
+  <title>FX RSS Feed</title>
   <link>https://reddsloman.github.io/fx-rss-feed/feed.xml</link>
-  <guid isPermaLink="false">20250826-022252</guid>
-  <pubDate>Tue, 26 Aug 2025 02:22:52 GMT</pubDate>
-  <description><![CDATA[USD: DXY consolidates near 104.80 as markets await Powell at Jackson Hole.<br>
-    EUR/USD: Holding 1.1420 support, resistance 1.1500.<br>
-    GBP/USD: Supported near 1.3550, capped at 1.3625.<br>
-    USD/JPY: Rangebound 144.20–145.00.<br>]]></description>
-</item>
-
+  <description>Automated FX Market Summaries and Technical Analysis</description>
+  <lastBuildDate>Tue, 26 Aug 2025 02:32:15 GMT</lastBuildDate>
+  <atom:link href="https://reddsloman.github.io/fx-rss-feed/feed.xml" 
+             rel="self" 
+             type="application/rss+xml" />
+  <item>
+    <title>FX Market Update – Sample</title>
+    <link>https://reddsloman.github.io/fx-rss-feed/feed.xml</link>
+    <guid isPermaLink="false">20250826-022252</guid>
+    <pubDate>Tue, 26 Aug 2025 02:22:52 GMT</pubDate>
+    <description><![CDATA[USD: DXY consolidates near 104.80.<br>EUR/USD: 1.1420 support, 1.1500 resistance.]]></description>
+  </item>
 </channel>
 </rss>
