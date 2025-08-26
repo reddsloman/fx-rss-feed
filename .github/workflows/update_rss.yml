@@ -1,40 +1,38 @@
 name: Update RSS Feed
 
 on:
+  workflow_dispatch:
   schedule:
-    - cron: "0 * * * *"   # runs every hour
-  workflow_dispatch:       # allow manual trigger
-
-permissions:
-  contents: write          # ✅ needed to push commits
+    - cron: "0 * * * *"  # runs every hour
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repo
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.x"
+          python-version: '3.x'
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt || true
 
-      - name: Generate RSS Feed
-        run: python generate_feed.py
+      - name: Generate feed
+        run: |
+          python generate_feed.py > feed.xml
 
-      - name: Commit and push changes
+      - name: Configure git
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit & push feed
+        run: |
           git add feed.xml
           git commit -m "Auto-update feed $(date -u)" || echo "No changes to commit"
           git push
