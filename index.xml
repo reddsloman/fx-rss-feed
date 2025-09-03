@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>FX Macro + Technical RSS Feed</title>
-    <link>https://reddsloman.github.io/fx-rss-feed/</link>
-    <atom:link href="https://reddsloman.github.io/fx-rss-feed/index.xml" rel="self" type="application/rss+xml" />
-    <description>Live updates with FX macro fundamentals, sentiment, technicals, and trade setups.</description>
-    <lastBuildDate>Tue, 26 Aug 2025 18:00:00 +0000</lastBuildDate>
-    <language>en-us</language>
-    
-    <item>
-      <title>FX Market Update 2025-08-26</title>
-      <link>https://www.reuters.com/markets/currencies/</link>
-      <description><![CDATA[Macro fundamentals, sentiment, and technical trade setups updated.]]></description>
-      <pubDate>Tue, 26 Aug 2025 18:00:00 +0000</pubDate>
-      <guid isPermaLink="false">fx-2025-08-26</guid>
-    </item>
-    
-  </channel>
+<channel>
+  <title>FX Macro + Technical RSS Feed</title>
+  <link>https://reddsloman.github.io/fx-rss-feed/</link>
+  <atom:link href="https://reddsloman.github.io/fx-rss-feed/index.xml" rel="self" type="application/rss+xml"/>
+  <description>Live updates with FX macro fundamentals, sentiment, technicals, and trade setups.</description>
+  <lastBuildDate>Tue, 26 Aug 2025 18:40:00 GMT</lastBuildDate>
+  <language>en-us</language>
+
+  <item>
+    <title>FX Market Update – Tue, 26 Aug 2025 18:40 GMT</title>
+    <link>https://www.reuters.com/markets/currencies/</link>
+    <description><![CDATA[
+      Macro fundamentals, sentiment, and technical trade setups updated.
+    ]]></description>
+    <pubDate>Tue, 26 Aug 2025 18:40:00 GMT</pubDate>
+    <guid isPermaLink="false">fx-20250826-184000</guid>
+  </item>
+</channel>
 </rss>
+
 
