@@ -1,14 +1,1 @@
-<?xml version='1.0' encoding='utf-8'?>
-<rss version="2.0"><channel><title>FX RSS Feed</title><link>https://reddsloman.github.io/fx-rss-feed/feed.xml</link><description>Automated FX Market Summaries and Technical Analysis</description><lastBuildDate>Tue, 26 Aug 2025 00:31:49 GMT</lastBuildDate><item><title>FX Macro &amp; Technical — 2025-08-26 00:31:49 UTC</title><link>https://reddsloman.github.io/fx-rss-feed/feed.xml</link><pubDate>Tue, 26 Aug 2025 00:31:49 GMT</pubDate><description>
-    &lt;h3&gt;EUR/USD&lt;/h3&gt;
-    &lt;p&gt;Macro: ECB guidance, Bund yields, eurozone data watch.&lt;/p&gt;
-    &lt;p&gt;Tech: key rails around spot EUR/USD (support/resistance).&lt;/p&gt;
 
-    &lt;h3&gt;GBP/USD&lt;/h3&gt;
-    &lt;p&gt;Macro: BoE policy expectations, gilt curve, UK CPI flows.&lt;/p&gt;
-    &lt;p&gt;Tech: GBP/USD support/resistance rails.&lt;/p&gt;
-
-    &lt;h3&gt;USD/JPY&lt;/h3&gt;
-    &lt;p&gt;Macro: BoJ policy stance, JGB yields, risk sentiment flows.&lt;/p&gt;
-    &lt;p&gt;Tech: USD/JPY reference rails around spot.&lt;/p&gt;
-    </description></item></channel></rss>
