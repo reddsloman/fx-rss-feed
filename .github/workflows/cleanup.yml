@@ -1,7 +1,7 @@
 name: Cleanup old RSS files
 
 on:
-  workflow_dispatch:   # you can trigger it manually
+  workflow_dispatch:
 
 jobs:
   cleanup:
@@ -9,10 +9,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
       - name: Remove duplicates
         run: |
+          rm -f feed.xml rss.xml   # just remove if exists
           git rm -f feed.xml rss.xml || true
-          git commit -m "🔥 Remove duplicate RSS files" || echo "Nothing to remove"
+          git add -u
+          git commit -m "🔥 Remove duplicate RSS files (cleanup)" || echo "No changes to commit"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
