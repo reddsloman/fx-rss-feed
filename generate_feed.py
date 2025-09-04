@@ -1,31 +1,95 @@
-import datetime
+import requests
+from bs4 import BeautifulSoup
+from datetime import datetime
+import pytz
+import xml.etree.ElementTree as ET
 
-def generate_rss():
-    now = datetime.datetime.utcnow()
-    formatted = now.strftime("%a, %d %b %Y %H:%M:%S GMT")
-    guid = now.strftime("fx-%Y%m%d-%H%M%S")
+# ---------------------------
+# Helper: get timestamp in RFC 822 format
+# ---------------------------
+def get_rfc822_now():
+    return datetime.now(pytz.UTC).strftime("%a, %d %b %Y %H:%M:%S GMT")
 
-    rss_content = f"""<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-<channel>
-<title>FX Macro + Technical RSS Feed</title>
-<link>https://reddsloman.github.io/fx-rss-feed/</link>
-<atom:link href="https://reddsloman.github.io/fx-rss-feed/index.xml" rel="self" type="application/rss+xml"/>
-<description>Live updates with FX macro fundamentals, sentiment, technicals, and trade setups.</description>
-<lastBuildDate>{formatted}</lastBuildDate>
-<language>en-us</language>
-<item>
-<title>FX Market Update {formatted}</title>
-<link>https://www.reuters.com/markets/currencies/</link>
-<description>Macro fundamentals, sentiment, and technical trade setups updated.</description>
-<pubDate>{formatted}</pubDate>
-<guid isPermaLink="false">{guid}</guid>
-</item>
-</channel>
-</rss>
-"""
-    with open("index.xml", "w", encoding="utf-8") as f:
-        f.write(rss_content)
+# ---------------------------
+# Scrape Reuters headlines
+# ---------------------------
+def fetch_reuters():
+    url = "https://www.reuters.com/markets/currencies/"
+    resp = requests.get(url, timeout=20)
+    soup = BeautifulSoup(resp.text, "html.parser")
+    headlines = []
+    for h in soup.select("a.story-card__headline__link")[:3]:
+        headlines.append(h.get_text(strip=True))
+    return headlines
+
+# ---------------------------
+# Scrape FXStreet technical levels
+# ---------------------------
+def fetch_fxstreet(pair_slug):
+    url = f"https://www.fxstreet.com/currencies/{pair_slug}"
+    resp = requests.get(url, timeout=20)
+    soup = BeautifulSoup(resp.text, "html.parser")
+    tech = []
+
+    # Pivot levels / support / resistance
+    levels = soup.select("table tr")
+    for tr in levels[:4]:
+        cols = [c.get_text(strip=True) for c in tr.find_all("td")]
+        if cols:
+            tech.append(" - ".join(cols))
+
+    # Momentum indicators summary
+    summary = soup.select_one(".technicalIndicatorsSummary")
+    if summary:
+        tech.append("Summary: " + summary.get_text(strip=True))
+
+    return tech if tech else ["No data"]
+
+# ---------------------------
+# Build structured body
+# ---------------------------
+def build_item():
+    now = get_rfc822_now()
+    reuters_news = fetch_reuters()
+
+    pairs = {
+        "EUR/USD": "eurusd",
+        "GBP/USD": "gbpusd",
+        "USD/JPY": "usdjpy"
+    }
+
+    body = ""
+    for name, slug in pairs.items():
+        tech = fetch_fxstreet(slug)
+        body += f"<strong>{name}</strong><br>\n"
+        body += f"Macro: {reuters_news[0] if reuters_news else 'No fresh macro headline'} (Reuters).<br>\n"
+        body += "Tech:<br>\n" + "<br>\n".join(tech) + "<br><br>\n"
+
+    return now, body
+
+# ---------------------------
+# Write RSS file
+# ---------------------------
+def write_feed():
+    now, body = build_item()
+
+    rss = ET.Element("rss", version="2.0")
+    channel = ET.SubElement(rss, "channel")
+    ET.SubElement(channel, "title").text = "FX Macro + Technical RSS Feed"
+    ET.SubElement(channel, "link").text = "https://reddsloman.github.io/fx-rss-feed/"
+    ET.SubElement(channel, "description").text = "Live updates with FX macro fundamentals, sentiment, technicals, and trade setups."
+    ET.SubElement(channel, "lastBuildDate").text = now
+    ET.SubElement(channel, "language").text = "en-us"
+
+    item = ET.SubElement(channel, "item")
+    ET.SubElement(item, "title").text = f"FX Market Update {now}"
+    ET.SubElement(item, "link").text = "https://www.reuters.com/markets/currencies/"
+    ET.SubElement(item, "description").text = body
+    ET.SubElement(item, "pubDate").text = now
+    ET.SubElement(item, "guid").text = f"fx-{now}"
+
+    tree = ET.ElementTree(rss)
+    tree.write("index.xml", encoding="utf-8", xml_declaration=True)
 
 if __name__ == "__main__":
-    generate_rss()
+    write_feed()
