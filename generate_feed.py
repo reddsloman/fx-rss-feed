@@ -1,8 +1,8 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 def generate_feed():
-    # always use current UTC time
-    now = datetime.utcnow()
+    # always use current UTC time (timezone-aware)
+    now = datetime.now(timezone.utc)
     now_rfc2822 = now.strftime("%a, %d %b %Y %H:%M:%S GMT")
     now_id = now.strftime("%Y%m%d-%H%M%S")
 
@@ -29,6 +29,8 @@ def generate_feed():
 </rss>'''
     with open("index.xml", "w", encoding="utf-8") as f:
         f.write(xml)
+
+    print(f"✅ Wrote index.xml successfully at {now_rfc2822}")
 
 if __name__ == "__main__":
     generate_feed()
